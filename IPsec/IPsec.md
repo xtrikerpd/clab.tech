@@ -3,7 +3,7 @@ We have two branch offices, Branch A and Branch B. The goal is to set up an IPse
 
 ![image](https://github.com/xtrikerpd/IPsec-Cisco-Router/assets/77069512/be37ad81-8f7d-405b-8c77-c5df4a511f94)
 
-### Configuration of IKE Phase 1 (ISAKMP) on R1
+## Configuration of IKE Phase 1 (ISAKMP) on R1
 ```
 R1>enable
 R1#configure terminal
@@ -15,7 +15,7 @@ R1(config-isakmp)#lifetime 86400
 R1(config-isakmp)#encryption aes 256
 ```
 **These parameters must match on both sides**
-### Verification of IKE Phase 1:
+## Verification of IKE Phase 1:
 ```
 R1#show crypto isakmp policy
 
@@ -27,13 +27,13 @@ Protection suite of priority 1
         Diffie-Hellman group:   #5 (1536 bit)
         lifetime:               86400 seconds, no volume limit
 ```
-### Configuration of the Pre-Shared Key used to authenticate against R2:
+## Configuration of the Pre-Shared Key used to authenticate against R2:
 ```
 Router(config)#crypto isakmp key 0 cisco address 10.10.10.2
 ```
 Note that the "**0**" in the above command indicates that the pre-shared key will be stored in the running configuration as plain text. To use encryption, use "**6**". 
 **Key must match on both sides**
-### Verification of the key used against R2:
+## Verification of the key used against R2:
 ```
 Router#show crypto isakmp key
 Keyring      Hostname/Address                            Preshared Key
@@ -45,18 +45,18 @@ Now it's time to define the "interesting" traffic that should be encrypted befor
 Router(config)#ip access-list extended ACL
 Router(config-ext-nacl)#permit ip 192.168.10.0 0.0.0.255 192.168.20.0 0.0.0.255
 ```
-### Configuration of IKE Phase 2 (IPsec) on R1:
+## Configuration of IKE Phase 2 (IPsec) on R1:
 ```
 R1(config)# crypto ipsec transform-set TS esp-256-aes esp-sha-hmac
 ```
-### Verification of the transform-set IKE Phase 2:
+## Verification of the transform-set IKE Phase 2:
 ```
 Router#show crypto ipsec transform-set
 Transform set TS: { esp-256-aes esp-sha-hmac  }
    will negotiate = { Tunnel,  },
 ```
 So now we have prepared IKE Phase 1, pre-shared key, and defined traffic that should be encrypted. IKE Phase 2 is configured, and now we need to put this together into a crypto map.
-### Cryptomap configuration on R1:
+## Cryptomap configuration on R1:
 ```
 Router(config)#crypto map cryptomap 1 ipsec-isakmp
 % NOTE: This new crypto map will remain disabled until a peer
@@ -66,7 +66,7 @@ Router(config-crypto-map)#set transform-set TS
 Router(config-crypto-map)#match address ACL
 ```
 The very last step on R1 is to apply the previously configured cryptomap to the interface, in this case, fa0/0.
-### Applying cryptomap to the interface:
+## Applying cryptomap to the interface:
 ```
 Router(config)#int fa0/0
 Router(config-if)#crypto map cryptomap
@@ -121,10 +121,10 @@ R2(config-crypto-map)#set transform-set TS
 R2(config-crypto-map)#match address ACL
 ```
 Now let's ping from PC1 from PC2
-### ![image](https://github.com/xtrikerpd/IPsec-Cisco-Router/assets/77069512/e154f023-56a2-477d-a33d-e431710b2847)
+## ![image](https://github.com/xtrikerpd/IPsec-Cisco-Router/assets/77069512/e154f023-56a2-477d-a33d-e431710b2847)
 
 To verify if the packets were actually encrypted, we can repeat the command show crypto ipsec sa on one of the routers and see that the count of encrypted/decrypted packets has increased.
-### ![image](https://github.com/xtrikerpd/IPsec-Cisco-Router/assets/77069512/5d77b9e6-50bc-4a66-8556-cecbad483489)
+## ![image](https://github.com/xtrikerpd/IPsec-Cisco-Router/assets/77069512/5d77b9e6-50bc-4a66-8556-cecbad483489)
 
 One more useful show command used for verification of IPsec tunnel:
 ```
@@ -138,7 +138,7 @@ Peer: 10.10.10.1 port 500
   IPSEC FLOW: permit ip 192.168.20.0/255.255.255.0 192.168.10.0/255.255.255.0
         Active SAs: 0, origin: crypto map
 ```
-### Wireshark Capture
+## Wireshark Capture
 Here we can see that ICMP packets are being encrypted by ESP
 ![Untitledvideo-ezgif com-video-to-gif-converter](https://github.com/xtrikerpd/IPsec-Cisco-Router/assets/77069512/35cdada9-379e-4bdb-85ce-e1d25140185d)
 
