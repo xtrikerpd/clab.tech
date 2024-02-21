@@ -51,14 +51,14 @@ R1(config)# crypto ipsec transform-set TS esp-256-aes esp-sha-hmac
 ```
 ## Verification of the transform-set IKE Phase 2:
 ```
-Router#show crypto ipsec transform-set
+R1#show crypto ipsec transform-set
 Transform set TS: { esp-256-aes esp-sha-hmac  }
    will negotiate = { Tunnel,  },
 ```
 So now we have prepared IKE Phase 1, pre-shared key, and defined traffic that should be encrypted. IKE Phase 2 is configured, and now we need to put this together into a crypto map.
 ## Cryptomap configuration on R1:
 ```
-Router(config)#crypto map cryptomap 1 ipsec-isakmp
+R1(config)#crypto map cryptomap 1 ipsec-isakmp
 % NOTE: This new crypto map will remain disabled until a peer
         and a valid access list have been configured.
 Router(config-crypto-map)#set peer 10.10.10.2
@@ -68,13 +68,13 @@ Router(config-crypto-map)#match address ACL
 The very last step on R1 is to apply the previously configured cryptomap to the interface, in this case, fa0/0.
 ## Applying cryptomap to the interface:
 ```
-Router(config)#int fa0/0
-Router(config-if)#crypto map cryptomap
+R1(config)#int fa0/0
+R1(config-if)#crypto map cryptomap
 *Mar  1 00:51:05.987: %CRYPTO-6-ISAKMP_ON_OFF: ISAKMP is ON
 ```
 Let's now verify:
 ```
-Router#show crypto ipsec sa
+R1#show crypto ipsec sa
 
 interface: FastEthernet0/0
     Crypto map tag: cryptomap, local addr 10.10.10.1
