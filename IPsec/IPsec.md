@@ -65,6 +65,22 @@ R1(config-crypto-map)#set peer 10.10.10.2
 R1(config-crypto-map)#set transform-set TS
 R1(config-crypto-map)#match address ACL
 ```
+## Verification of Crypto Map
+```
+R2#show crypto map
+Crypto Map "cryptomap" 1 ipsec-isakmp
+        Peer = 10.10.10.1
+        Extended IP access list ACL
+            access-list ACL permit ip 192.168.20.0 0.0.0.255 192.168.10.0 0.0.0.255
+        Current peer: 10.10.10.1
+        Security association lifetime: 4608000 kilobytes/3600 seconds
+        PFS (Y/N): N
+        Transform sets={
+                TS,
+        }
+        Interfaces using crypto map cryptomap:
+                FastEthernet0/0
+```
 The very last step on R1 is to apply the previously configured cryptomap to the interface, in this case, fa0/0.
 ## Applying cryptomap to the interface:
 ```
