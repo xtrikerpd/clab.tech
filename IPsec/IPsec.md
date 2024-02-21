@@ -61,9 +61,9 @@ So now we have prepared IKE Phase 1, pre-shared key, and defined traffic that sh
 R1(config)#crypto map cryptomap 1 ipsec-isakmp
 % NOTE: This new crypto map will remain disabled until a peer
         and a valid access list have been configured.
-Router(config-crypto-map)#set peer 10.10.10.2
-Router(config-crypto-map)#set transform-set TS
-Router(config-crypto-map)#match address ACL
+R1(config-crypto-map)#set peer 10.10.10.2
+R1(config-crypto-map)#set transform-set TS
+R1(config-crypto-map)#match address ACL
 ```
 The very last step on R1 is to apply the previously configured cryptomap to the interface, in this case, fa0/0.
 ## Applying cryptomap to the interface:
