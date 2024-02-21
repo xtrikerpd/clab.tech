@@ -3,7 +3,7 @@ We have two branch offices, Branch A and Branch B. The goal is to set up an IPse
 
 ![image](https://github.com/xtrikerpd/IPsec-Cisco-Router/assets/77069512/be37ad81-8f7d-405b-8c77-c5df4a511f94)
 
-###Configuration of IKE Phase 1 (ISAKMP) on R1
+### Configuration of IKE Phase 1 (ISAKMP) on R1
 ```
 R1>enable
 R1#configure terminal
@@ -14,6 +14,7 @@ R1(config-isakmp)#group 5
 R1(config-isakmp)#lifetime 86400
 R1(config-isakmp)#encryption aes 256
 ```
+**These parameters must match on both sides**
 ### Verification of IKE Phase 1:
 ```
 R1#show crypto isakmp policy
@@ -30,6 +31,8 @@ Protection suite of priority 1
 ```
 Router(config)#crypto isakmp key 0 cisco address 10.10.10.2
 ```
+Note that the "**0**" in the above command indicates that the pre-shared key will be stored in the running configuration as plain text. To use encryption, use "**6**". 
+**Key must match on both sides**
 ### Verification of the key used against R2:
 ```
 Router#show crypto isakmp key
@@ -37,7 +40,7 @@ Keyring      Hostname/Address                            Preshared Key
 
 default      10.10.10.2                                  cisco
 ```
-Note that the "0" in the above command indicates that the pre-shared key will be stored in the running configuration as plain text. To use encryption, use "6". Now it's time to define the "interesting" traffic that should be encrypted before it's sent; this can be defined by an extended ACL:
+Now it's time to define the "interesting" traffic that should be encrypted before it's sent; this can be defined by an extended ACL:
 ```
 Router(config)#ip access-list extended ACL
 Router(config-ext-nacl)#permit ip 192.168.10.0 0.0.0.255 192.168.20.0 0.0.0.255
@@ -122,3 +125,20 @@ Now let's ping from PC1 from PC2
 
 To verify if the packets were actually encrypted, we can repeat the command show crypto ipsec sa on one of the routers and see that the count of encrypted/decrypted packets has increased.
 ### ![image](https://github.com/xtrikerpd/IPsec-Cisco-Router/assets/77069512/5d77b9e6-50bc-4a66-8556-cecbad483489)
+
+One more useful show command used for verification of IPsec tunnel:
+```
+R2#show crypto session
+Crypto session current status
+
+Interface: FastEthernet0/0
+Session status: UP-IDLE
+Peer: 10.10.10.1 port 500
+  IKE SA: local 10.10.10.2/500 remote 10.10.10.1/500 Active
+  IPSEC FLOW: permit ip 192.168.20.0/255.255.255.0 192.168.10.0/255.255.255.0
+        Active SAs: 0, origin: crypto map
+```
+### Wireshark Capture
+Here we can see that ICMP packets are being encrypted by ESP
+![Untitledvideo-ezgif com-video-to-gif-converter](https://github.com/xtrikerpd/IPsec-Cisco-Router/assets/77069512/35cdada9-379e-4bdb-85ce-e1d25140185d)
+
