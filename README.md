@@ -1,5 +1,5 @@
 # IPsec-Cisco-Router
-We have 2 branch offices Branch 1 and Branch 2, the goal is to setup IPsec VPN tunnel between R1 and R2 so traffic between branch A and branch B are encrypted.
+We have two branch offices, Branch 1 and Branch 2. The goal is to set up an IPsec VPN tunnel between R1 and R2 so that traffic between Branch A and Branch B is encrypted.
 
 ![image](https://github.com/xtrikerpd/IPsec-Cisco-Router/assets/77069512/be37ad81-8f7d-405b-8c77-c5df4a511f94)
 
@@ -37,8 +37,7 @@ Keyring      Hostname/Address                            Preshared Key
 
 default      10.10.10.2                                  cisco
 ```
-Note that "0" in the above command, it indicates that preshared key will be stored in running configuration as plain-text, in order to use encryption use 6
-Now it's time to define the "interesting" traffic that should be encrypted before it's sent, this can be defined by extended ACL
+Note that the "0" in the above command indicates that the pre-shared key will be stored in the running configuration as plain text. To use encryption, use "6". Now it's time to define the "interesting" traffic that should be encrypted before it's sent; this can be defined by an extended ACL:
 ```
 Router(config)#ip access-list extended ACL
 Router(config-ext-nacl)#permit ip 192.168.10.0 0.0.0.255 192.168.20.0 0.0.0.255
@@ -53,7 +52,7 @@ Router#show crypto ipsec transform-set
 Transform set TS: { esp-256-aes esp-sha-hmac  }
    will negotiate = { Tunnel,  },
 ```
-So now we have prepared IKE Phase1, preshared key and defined a traffic that should be encrypted and IKE Phase2 now we need to put this together into crypto map.
+So now we have prepared IKE Phase 1, pre-shared key, and defined traffic that should be encrypted. IKE Phase 2 is configured, and now we need to put this together into a crypto map.
 ### Cryptomap configuration on R1
 ```
 Router(config)#crypto map cryptomap 1 ipsec-isakmp
@@ -63,14 +62,14 @@ Router(config-crypto-map)#set peer 10.10.10.2
 Router(config-crypto-map)#set transform-set TS
 Router(config-crypto-map)#match address ACL
 ```
-Very last step on R1 is to apply previously configured cryptomap to interface, in this case fa0/0
+The very last step on R1 is to apply the previously configured cryptomap to the interface, in this case, fa0/0.
 ### Applying cryptomap to interface
 ```
 Router(config)#int fa0/0
 Router(config-if)#crypto map cryptomap
 *Mar  1 00:51:05.987: %CRYPTO-6-ISAKMP_ON_OFF: ISAKMP is ON
 ```
-Let's now verify 
+Let's now verify:
 ```
 Router#show crypto ipsec sa
 
@@ -93,7 +92,7 @@ interface: FastEthernet0/0
      path mtu 1500, ip mtu 1500, ip mtu idb FastEthernet0/0
      current outbound spi: 0x0(0)
 ```
-Now its time to configure R2, it will be very similar, just few adjustments are needed like change the peer address and reversed entry in ACL
+Now it's time to configure R2, which will be very similar, with just a few adjustments needed, like changing the peer address and reversing the entry in the ACL.
 ```
 R2>enable
 R2#configure terminal
@@ -121,5 +120,5 @@ R2(config-crypto-map)#match address ACL
 Now let's ping from PC1 from PC2
 ### ![image](https://github.com/xtrikerpd/IPsec-Cisco-Router/assets/77069512/e154f023-56a2-477d-a33d-e431710b2847)
 
-To verify if the packets were actually encrypted we can repeat the command show crypto ipsec sa on one of the routets and we will see that count of encypted/decrypted packets were increased
+To verify if the packets were actually encrypted, we can repeat the command show crypto ipsec sa on one of the routers and see that the count of encrypted/decrypted packets has increased.
 ### ![image](https://github.com/xtrikerpd/IPsec-Cisco-Router/assets/77069512/5d77b9e6-50bc-4a66-8556-cecbad483489)
