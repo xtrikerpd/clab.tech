@@ -1,5 +1,5 @@
 # IPsec-Cisco-Router
-Let's connect Branch A and Branch B using IPsec VPN tunnel
+We have 2 branch offices Branch 1 and Branch 2, the goal is to setup IPsec VPN tunnel between R1 and R2 so traffic between branch A and branch B are encrypted.
 
 ![image](https://github.com/xtrikerpd/IPsec-Cisco-Router/assets/77069512/be37ad81-8f7d-405b-8c77-c5df4a511f94)
 
