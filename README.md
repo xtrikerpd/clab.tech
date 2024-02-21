@@ -95,28 +95,28 @@ interface: FastEthernet0/0
 ```
 Now its time to configure R2, it will be very similar, just few adjustments are needed like change the peer address and reversed entry in ACL
 ```
-R1>enable
-R1#configure terminal
-R1(config)#crypto isakmp policy 1
-R1(config-isakmp)#hash sha
-R1(config-isakmp)#authentication pre-share
-R1(config-isakmp)#group 5
-R1(config-isakmp)#lifetime 86400
-R1(config-isakmp)#encryption aes 256
+R2>enable
+R2#configure terminal
+R2(config)#crypto isakmp policy 1
+R2(config-isakmp)#hash sha
+R2(config-isakmp)#authentication pre-share
+R2(config-isakmp)#group 5
+R2(config-isakmp)#lifetime 86400
+R2(config-isakmp)#encryption aes 256
 
-Router(config)#crypto isakmp key 0 cisco address 10.10.10.1
+R2(config)#crypto isakmp key 0 cisco address 10.10.10.1
 
-Router(config)#ip access-list extended ACL
-Router(config-ext-nacl)#permit ip 192.168.20.0 0.0.0.255 192.168.10.0 0.0.0.255
+R2(config)#ip access-list extended ACL
+R2(config-ext-nacl)#permit ip 192.168.20.0 0.0.0.255 192.168.10.0 0.0.0.255
 
-R1(config)# crypto ipsec transform-set TS esp-256-aes esp-sha-hmac
+R2(config)# crypto ipsec transform-set TS esp-256-aes esp-sha-hmac
 
-Router(config)#crypto map cryptomap 1 ipsec-isakmp
+R2(config)#crypto map cryptomap 1 ipsec-isakmp
 % NOTE: This new crypto map will remain disabled until a peer
         and a valid access list have been configured.
-Router(config-crypto-map)#set peer 10.10.10.1
-Router(config-crypto-map)#set transform-set TS
-Router(config-crypto-map)#match address ACL
+R2(config-crypto-map)#set peer 10.10.10.1
+R2(config-crypto-map)#set transform-set TS
+R2(config-crypto-map)#match address ACL
 ```
 Now let's ping from PC1 from PC2
 ### ![image](https://github.com/xtrikerpd/IPsec-Cisco-Router/assets/77069512/e154f023-56a2-477d-a33d-e431710b2847)
