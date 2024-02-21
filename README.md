@@ -1,5 +1,5 @@
 # IPsec-Cisco-Router
-We have two branch offices, Branch 1 and Branch 2. The goal is to set up an IPsec VPN tunnel between R1 and R2 so that traffic between Branch A and Branch B is encrypted.
+We have two branch offices, Branch A and Branch B. The goal is to set up an IPsec VPN tunnel between R1 and R2 so that traffic between Branch A and Branch B is encrypted.
 
 ![image](https://github.com/xtrikerpd/IPsec-Cisco-Router/assets/77069512/be37ad81-8f7d-405b-8c77-c5df4a511f94)
 
