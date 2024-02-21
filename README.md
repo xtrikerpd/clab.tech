@@ -119,7 +119,7 @@ Router(config-crypto-map)#set transform-set TS
 Router(config-crypto-map)#match address ACL
 ```
 Now let's ping from PC1 from PC2
-![image](https://github.com/xtrikerpd/IPsec-Cisco-Router/assets/77069512/e154f023-56a2-477d-a33d-e431710b2847)
+### ![image](https://github.com/xtrikerpd/IPsec-Cisco-Router/assets/77069512/e154f023-56a2-477d-a33d-e431710b2847)
 
 To verify if the packets were actually encrypted we can repeat the command show crypto ipsec sa on one of the routets and we will see that count of encypted/decrypted packets were increased
-![image](https://github.com/xtrikerpd/IPsec-Cisco-Router/assets/77069512/5d77b9e6-50bc-4a66-8556-cecbad483489)
+### ![image](https://github.com/xtrikerpd/IPsec-Cisco-Router/assets/77069512/5d77b9e6-50bc-4a66-8556-cecbad483489)
