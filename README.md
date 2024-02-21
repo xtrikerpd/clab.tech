@@ -3,7 +3,7 @@ We have two branch offices, Branch 1 and Branch 2. The goal is to set up an IPse
 
 ![image](https://github.com/xtrikerpd/IPsec-Cisco-Router/assets/77069512/be37ad81-8f7d-405b-8c77-c5df4a511f94)
 
-### Configuration of IKE Phase1 also called ISAKMP (Internet Security Association and Key Management Protocol) on R1
+###Configuration of IKE Phase 1 (ISAKMP) on R1
 ```
 R1>enable
 R1#configure terminal
@@ -14,7 +14,7 @@ R1(config-isakmp)#group 5
 R1(config-isakmp)#lifetime 86400
 R1(config-isakmp)#encryption aes 256
 ```
-### Verification of IKE Phase1 
+### Verification of IKE Phase 1:
 ```
 R1#show crypto isakmp policy
 
@@ -26,11 +26,11 @@ Protection suite of priority 1
         Diffie-Hellman group:   #5 (1536 bit)
         lifetime:               86400 seconds, no volume limit
 ```
-### Configuration of pre-shared key used to authenticate against peer - R2
+### Configuration of the Pre-Shared Key used to authenticate against R2:
 ```
 Router(config)#crypto isakmp key 0 cisco address 10.10.10.2
 ```
-### Verification of key used against R2
+### Verification of the key used against R2:
 ```
 Router#show crypto isakmp key
 Keyring      Hostname/Address                            Preshared Key
@@ -42,18 +42,18 @@ Note that the "0" in the above command indicates that the pre-shared key will be
 Router(config)#ip access-list extended ACL
 Router(config-ext-nacl)#permit ip 192.168.10.0 0.0.0.255 192.168.20.0 0.0.0.255
 ```
-### Configuration of IKE Phase2 also called IPsec on R1
+### Configuration of IKE Phase 2 (IPsec) on R1:
 ```
 R1(config)# crypto ipsec transform-set TS esp-256-aes esp-sha-hmac
 ```
-### Verification of transform-set IKE Phase2
+### Verification of the transform-set IKE Phase 2:
 ```
 Router#show crypto ipsec transform-set
 Transform set TS: { esp-256-aes esp-sha-hmac  }
    will negotiate = { Tunnel,  },
 ```
 So now we have prepared IKE Phase 1, pre-shared key, and defined traffic that should be encrypted. IKE Phase 2 is configured, and now we need to put this together into a crypto map.
-### Cryptomap configuration on R1
+### Cryptomap configuration on R1:
 ```
 Router(config)#crypto map cryptomap 1 ipsec-isakmp
 % NOTE: This new crypto map will remain disabled until a peer
@@ -63,7 +63,7 @@ Router(config-crypto-map)#set transform-set TS
 Router(config-crypto-map)#match address ACL
 ```
 The very last step on R1 is to apply the previously configured cryptomap to the interface, in this case, fa0/0.
-### Applying cryptomap to interface
+### Applying cryptomap to the interface:
 ```
 Router(config)#int fa0/0
 Router(config-if)#crypto map cryptomap
