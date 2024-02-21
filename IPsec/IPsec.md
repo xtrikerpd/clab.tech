@@ -29,21 +29,21 @@ Protection suite of priority 1
 ```
 ## Configuration of the Pre-Shared Key used to authenticate against R2:
 ```
-Router(config)#crypto isakmp key 0 cisco address 10.10.10.2
+R1(config)#crypto isakmp key 0 cisco address 10.10.10.2
 ```
 Note that the "**0**" in the above command indicates that the pre-shared key will be stored in the running configuration as plain text. To use encryption, use "**6**". 
 **Key must match on both sides**
 ## Verification of the key used against R2:
 ```
-Router#show crypto isakmp key
+R1#show crypto isakmp key
 Keyring      Hostname/Address                            Preshared Key
 
 default      10.10.10.2                                  cisco
 ```
 Now it's time to define the "interesting" traffic that should be encrypted before it's sent; this can be defined by an extended ACL:
 ```
-Router(config)#ip access-list extended ACL
-Router(config-ext-nacl)#permit ip 192.168.10.0 0.0.0.255 192.168.20.0 0.0.0.255
+R1(config)#ip access-list extended ACL
+R1(config-ext-nacl)#permit ip 192.168.10.0 0.0.0.255 192.168.20.0 0.0.0.255
 ```
 ## Configuration of IKE Phase 2 (IPsec) on R1:
 ```
